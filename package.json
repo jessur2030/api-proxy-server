@@ -1,0 +1,17 @@
+{
+ "name": "fastify_proxy_server",
+ "version": "1.0.0",
+ "description": "",
+ "main": "index.js",
+ "scripts": {
+  "dev": " tsx --watch src/main.ts",
+  "build": "tsc"
+ },
+ "keywords": [],
+ "author": "",
+ "license": "ISC",
+ "dependencies": {
+  "fastify": "^4.25.2",
+  "zod": "^3.22.4"
+ }
+}
