@@ -1,6 +1,7 @@
 import fastify, {FastifyInstance} from 'fastify';
 import dotenv from 'dotenv';
 import fastifyCors from "@fastify/cors";
+import { weatherRoutes } from './module/weather/weather.route';
 dotenv.config();
 
 const PORT = parseInt(process.env.PORT || "9000", 10)
@@ -22,6 +23,9 @@ export async function buildServer(): Promise<FastifyInstance> {
     app.get('/healthcheck', ()=>{
         return {status: "Ok", port: PORT, timestamp: new Date().toISOString()}
     })
+
+    // register routes
+    app.register(weatherRoutes, {prefix: '/api/v1/weather'})
 
     // register cors
     app.register(fastifyCors, {
