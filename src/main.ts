@@ -1,11 +1,10 @@
-import fastify, {FastifyInstance} from 'fastify';
-import dotenv from 'dotenv';
+import "dotenv/config";
+import fastify, { FastifyInstance } from "fastify";
 import fastifyCors from "@fastify/cors";
 import { weatherRoutes } from './module/weather/weather.route';
-dotenv.config();
 
-const PORT = parseInt(process.env.PORT || "9000", 10)
-const HOST = process.env.HOST || "0.0.0.0"
+const PORT = parseInt(process.env.PORT || "9000", 10);
+const HOST = process.env.HOST || "0.0.0.0";
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -24,26 +23,23 @@ export async function buildServer(): Promise<FastifyInstance> {
         return {status: "Ok", port: PORT, timestamp: new Date().toISOString()}
     })
 
-    // register routes
-    app.register(weatherRoutes, {prefix: '/api/v1/weather'})
+    // register weather routes with prefix api/v1/weather
+    app.register(weatherRoutes, { prefix: '/api/v1/weather' })
 
     // register cors
     app.register(fastifyCors, {
         origin: CORS_ORIGIN
     })
-
     return app;
 }
 
-
 async function main(){
     const app =  await buildServer();
-
     await app.listen({
         port: PORT,
         host: HOST
     })
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port http://${HOST}:${PORT} in ${NODE_ENV} mode`);
 }
 
 main();
