@@ -1,18 +1,30 @@
 import { z } from 'zod';
 import { zodToJsonSchema } from "zod-to-json-schema";
 
-export const WeatherSchema = z.object({
+const weatherQuerySchema = z.object({
   q: z.string().optional(),
-  lat: z.string().optional(),
-  lon: z.string().optional(),
+  lat: z.number().optional(),
+  lon: z.number().optional(),
   zip: z.string().optional(),
-}).refine(data => {
-  // At least one of the city, lat-lon, or zip should be provided
-  return !!(data.q || (data.lat && data.lon) || data.zip);
-}, {
-  // Custom error message
-  message: 'At least one of city, lat-lon, or zip must be provided',
+})
+
+export const weather200ResponseSchema = z.object({
+  status: z.boolean(),
+  message: z.string(),
+  response: z.object({}).passthrough(), // Use .passthrough() for an open object
 });
 
-export type WeatherSchemaType = z.infer<typeof WeatherSchema>;
-export const WeatherSchemaJsonSchema = zodToJsonSchema(WeatherSchema, "WeatherSchema");
+export const weatherErrorResponseSchema = z.object({
+  error: z.string(),
+  message: z.string(),
+});
+
+export type WeatherSchemaType = z.infer<typeof weatherQuerySchema>;
+export type Weather200ResponseSchemaType = z.infer<typeof weather200ResponseSchema>;
+
+// Exporting JSON Schemas for Fastify and Swagger
+export const weatherQueryJsonSchema = zodToJsonSchema(weatherQuerySchema);
+export const weather200ResponseJsonSchema = zodToJsonSchema(weather200ResponseSchema);
+export const weatherErrorResponseJsonSchema = zodToJsonSchema(weatherErrorResponseSchema);
+
+
