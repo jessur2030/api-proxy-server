@@ -1,10 +1,13 @@
 import { FastifyInstance } from 'fastify';
-import { currentWeatherDataHandler } from './weather.controller';
+import { handleWeatherData } from './weather.controller';
 import { weatherQueryJsonSchema, weather200ResponseJsonSchema, weatherErrorResponseJsonSchema } from './weather.schema';
 
 export async function weatherRoutes(app: FastifyInstance) {
   app.get('/current', {
     schema: {
+      tags: ['Weather'],
+      summary: 'Get current weather data for a location.',
+      description: 'Get the current weather data for a location by city name, lat-lon pair, or zip code.',
       querystring: weatherQueryJsonSchema,
       response: {
         200: weather200ResponseJsonSchema,
@@ -12,9 +15,12 @@ export async function weatherRoutes(app: FastifyInstance) {
         500: weatherErrorResponseJsonSchema,
       }
     }
-  }, currentWeatherDataHandler);
+  }, handleWeatherData);
   app.get('/forecast', {
     schema: {
+      tags: ['Weather'],
+      summary: 'Get weather forecast data for a location.',
+      description: 'Get the weather forecast data for a location by city name, lat-lon pair, or zip code.',
       querystring: weatherQueryJsonSchema,
       response: {
         200: weather200ResponseJsonSchema,
@@ -22,5 +28,5 @@ export async function weatherRoutes(app: FastifyInstance) {
         500: weatherErrorResponseJsonSchema,
       }
     }
-  }, currentWeatherDataHandler);
+  }, handleWeatherData);
 }

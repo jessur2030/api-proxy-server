@@ -20,16 +20,21 @@ export async function buildServer(): Promise<FastifyInstance> {
 
 	await app.register(fastifySwagger, {
         mode: "dynamic",
-		swagger: {
-            info: {
-                title: "Proxy server API",
-				version: "0.1.0",
-                description: "Proxy server API",
-
-			},
+            swagger: {
+                info: {
+                  title: "Proxy server API",
+                  version: "0.1.0",
+                  description: "This API serves as a proxy.",
+                  license: {
+                    name: "MIT",
+                    url: "https://opensource.org/licenses/MIT",
+                  }
+              },
+              tags: [
+                { name: 'Weather', description: 'Weather-related endpoints' },
+                { name: '', description: 'General purpose endpoints' }
+              ],
 		},
-
-
 	});
 
 	await app.register(fastifySwaggerUi, {
@@ -41,7 +46,10 @@ export async function buildServer(): Promise<FastifyInstance> {
     * Healthcheck route.
     * @returns {Object} The healthcheck response.
     */
-   app.get('/healthcheck',  {schema: {response: {200: healthcheckResponseJsonSchema,},}}, ()=>{
+   app.get('/healthcheck',  {schema: {
+        tags: ['Default'], 
+        summary: 'Health Check',
+        description: 'Performs a simple health check, returning the API status and timestamp. Useful for monitoring and uptime checks.', response: {200: healthcheckResponseJsonSchema,},}}, ()=>{
         return {status: "Ok", port: PORT, timestamp: new Date().toISOString()}
     })
 
