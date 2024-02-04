@@ -42,6 +42,13 @@ export async function buildServer(): Promise<FastifyInstance> {
 
 	});
 
+    // register cors
+    await app.register(fastifyCors, {
+		origin: "*",
+		methods: ["GET", "POST", "PUT", "DELETE"],
+		allowedHeaders: ["Content-Type"],
+	});
+
     /**
     * Healthcheck route.
     * @returns {Object} The healthcheck response.
