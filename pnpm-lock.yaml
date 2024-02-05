@@ -8,6 +8,9 @@ dependencies:
   '@fastify/cors':
     specifier: ^8.5.0
     version: 8.5.0
+  '@fastify/rate-limit':
+    specifier: ^9.1.0
+    version: 9.1.0
   '@fastify/swagger':
     specifier: ^8.14.0
     version: 8.14.0
@@ -23,6 +26,9 @@ dependencies:
   fastify-zod:
     specifier: ^1.4.0
     version: 1.4.0(fastify@4.25.2)
+  node-cache:
+    specifier: ^5.1.2
+    version: 5.1.2
   node-fetch:
     specifier: ^3.3.2
     version: 3.3.2
@@ -287,6 +293,14 @@ packages:
       fast-json-stringify: 5.10.0
     dev: false
 
+  /@fastify/rate-limit@9.1.0:
+    resolution: {integrity: sha512-h5dZWCkuZXN0PxwqaFQLxeln8/LNwQwH9popywmDCFdKfgpi4b/HoMH1lluy6P+30CG9yzzpSpwTCIPNB9T1JA==}
+    dependencies:
+      '@lukeed/ms': 2.0.2
+      fastify-plugin: 4.5.1
+      toad-cache: 3.7.0
+    dev: false
+
   /@fastify/send@2.1.0:
     resolution: {integrity: sha512-yNYiY6sDkexoJR0D8IDy3aRP3+L4wdqCpvx5WP+VtEU58sn7USmKynBzDQex5X42Zzvw2gNzzYgP90UfWShLFA==}
     dependencies:
@@ -460,6 +474,11 @@ packages:
       sentence-case: 3.0.4
       snake-case: 3.0.4
       tslib: 2.6.2
+    dev: false
+
+  /clone@2.1.2:
+    resolution: {integrity: sha512-3Pe/CF1Nn94hyhIYpjtiLhdCoEoz0DqQ+988E9gmeEdQZlojxnOb74wctFyuwWQHzqyf9X7C7MG8juUpqBJT8w==}
+    engines: {node: '>=0.8'}
     dev: false
 
   /constant-case@3.0.4:
@@ -825,6 +844,13 @@ packages:
     dependencies:
       lower-case: 2.0.2
       tslib: 2.6.2
+    dev: false
+
+  /node-cache@5.1.2:
+    resolution: {integrity: sha512-t1QzWwnk4sjLWaQAS8CHgOJ+RAfmHpxFWmc36IWTiWHQfs0w5JDMBS1b1ZxQteo0vVVuWJvIUKHDkkeK7vIGCg==}
+    engines: {node: '>= 8.0.0'}
+    dependencies:
+      clone: 2.1.2
     dev: false
 
   /node-domexception@1.0.0:
