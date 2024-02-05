@@ -39,7 +39,7 @@ export async function buildServer(): Promise<FastifyInstance> {
 	});
 
 	await app.register(fastifySwaggerUi, {
-		routePrefix: "/docs",
+		routePrefix: "/documentation",
 
 	});
 
