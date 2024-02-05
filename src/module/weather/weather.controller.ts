@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { WeatherSchemaType } from "./weather.schema";
 import { appendWeatheSearchParams, determineEndpoint, fetchData, validateWeatherQueryParams } from "../../lib/utils";
-import { cacheService } from "../../lib/cacheService";
+import { cacheService } from "../../lib/services/cacheService";
 
 const OPEN_WEATHER_API_BASE_URL = process.env.OPEN_WEATHER_API_BASE_URL as string;
 const OPEN_WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY as string;
