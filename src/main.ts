@@ -5,6 +5,7 @@ import {fastifySwagger} from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import { weatherRoutes } from './module/weather/weather.route';
 import { healthcheckResponseJsonSchema } from "./module/weather/weather.schema";
+import fastifyRateLimit from "@fastify/rate-limit";
 
 const PORT = parseInt(process.env.PORT || "9000", 10);
 const HOST = process.env.HOST || "0.0.0.0";
@@ -48,6 +49,24 @@ export async function buildServer(): Promise<FastifyInstance> {
 		methods: ["GET", "POST", "PUT", "DELETE"],
 		allowedHeaders: ["Content-Type"],
 	});
+
+    await app.register(fastifyRateLimit, {
+        max: 100, // Max number of requests per timeWindow per client
+        timeWindow: '4 hour', // Time window for the rate limit
+        // allowList: ['127.0.0.1'], // Requests from these IPs will skip rate limiting
+        keyGenerator: (req) => req.ip, // Function to generate keys used to track requests (default: IP)
+        addHeaders: {
+            'x-ratelimit-limit': true,
+            'x-ratelimit-remaining': true,
+            'x-ratelimit-reset': true,
+            'retry-after': true
+        },
+        errorResponseBuilder: (req, context) => ({
+            code: 429,
+            error: "Too Many Requests",
+            message: `Rate limit exceeded, retry in ${context.after}`
+        }),
+    });
 
     /**
     * Healthcheck route.
