@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { WeatherSchemaType } from "./weather.schema";
 import { appendWeatheSearchParams, determineEndpoint, fetchData, validateWeatherQueryParams } from "../../lib/utils";
+import { cacheService } from "../../lib/cacheService";
 
 const OPEN_WEATHER_API_BASE_URL = process.env.OPEN_WEATHER_API_BASE_URL as string;
 const OPEN_WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY as string;
@@ -12,6 +13,15 @@ const OPEN_WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY as string;
   const endpoint = determineEndpoint(request.url);
   const searchParams = new URLSearchParams({ appid: OPEN_WEATHER_API_KEY });
   const queryParams = request.query;
+
+  const { q, lat, lon, zip } = request.query as WeatherSchemaType;
+  const cacheKey: string = `${endpoint}-${q || lat + ',' + lon || zip}`;
+
+  // Attempt to retrieve data from cache
+  let data = cacheService.get(cacheKey);
+  if (data) {
+       return reply.status(200).send({status: true, message: "Weather data fetched successfully", response: data});
+  }
   const validation = validateWeatherQueryParams(queryParams);
   if (!validation.isValid) {
     return reply.status(400).send({ status: false, message: validation.message });
@@ -23,7 +33,7 @@ const OPEN_WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY as string;
     const url = `${OPEN_WEATHER_API_BASE_URL}/${endpoint}?${searchParams.toString()}`;
     console.log(`Fetching weather data from: ${url}`); // For debugging
     const data = await fetchData(url);
-    // Format data as per SuccessResponseSchema before sending
+    cacheService.set(cacheKey, data, 300); // Cache for 5 minutes
     return reply.status(200).send({status: true, message: "Weather data fetched successfully", response: data});
   } catch (error) {
     console.error('Error fetching weather data:', error); // Detailed logging
