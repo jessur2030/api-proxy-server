@@ -10,7 +10,7 @@ const cache = new NodeCache({ stdTTL: 600 }); // Default TTL is 10 minutes
  * @param key - The cache key to retrieve.
  * @returns The cached value or undefined if not found.
  */
-function get<T>(key: string): T | undefined {
+async function get<T>(key: string): Promise<T | undefined>{
     try {
         return cache.get<T>(key);
     } catch (error) {
@@ -26,7 +26,7 @@ function get<T>(key: string): T | undefined {
  * @param ttl - Time to live in seconds. Defaults to 600 seconds.
  * @returns True on success, false on failure.
  */
-function set<T>(key: string, value: T, ttl: number = 600): boolean {
+async function set<T>(key: string, value: T, ttl: number = 600): Promise<boolean> {
     try {
         return cache.set(key, value, ttl);
     } catch (error) {
@@ -41,7 +41,7 @@ function set<T>(key: string, value: T, ttl: number = 600): boolean {
  * @param key - The cache key to remove.
  * @returns The number of removed entries, 1 if an entry was deleted.
  */
-function del(key: string): number {
+async function del(key: string): Promise<number> {
     try {
         return cache.del(key);
     } catch (error) {
@@ -55,7 +55,7 @@ function del(key: string): number {
  * 
  * @returns void
  */
-function flush(): void {
+async function flush(): Promise<void> {
     try {
         cache.flushAll();
     } catch (error) {
