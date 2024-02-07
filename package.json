@@ -2,10 +2,11 @@
   "name": "fastify_proxy_server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/main.js",
   "scripts": {
     "dev": " tsx watch src/main.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node build/main.js"
   },
   "keywords": [],
   "author": "",
