@@ -21,7 +21,7 @@ export async function buildServer(): Promise<FastifyInstance> {
 
 	await app.register(fastifySwagger, {
         mode: "dynamic",
-            swagger: {
+        openapi: {
                 info: {
                   title: "Proxy server API",
                   version: "0.1.0",

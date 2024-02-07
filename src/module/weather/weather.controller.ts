@@ -34,13 +34,11 @@ const OPEN_WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY as string;
   
   try {
     const url = `${OPEN_WEATHER_API_BASE_URL}/${endpoint}?${searchParams.toString()}`;
-    console.log(`Fetching weather data from: ${url}`); // For debugging
     const freshData  = await fetchData(url);
    await cacheService.set(cacheKey, freshData , 300); // Cache for 5 minutes
     // await redisCacheService.set(cacheKey, freshData , 300); // Cache for 5 minutes
     return reply.status(200).send({status: true, message: "Weather data fetched successfully", response: freshData });
   } catch (error) {
-    console.error('Error fetching weather data:', error); // Detailed logging
     return reply.status(500).send({ error: "Internal Server Error", message: "Error fetching weather data" });
   }
 }
