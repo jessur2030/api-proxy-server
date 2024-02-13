@@ -9,9 +9,8 @@ import fastifyRateLimit from "@fastify/rate-limit";
 
 const PORT = parseInt(process.env.PORT || "9000", 10);
 const HOST = process.env.HOST || "0.0.0.0";
-const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
+const CORS_ORIGIN_WEATHER_APP = process.env.CORS_ORIGIN_WEATHER_APP as string;
 const NODE_ENV = process.env.NODE_ENV;
-
 /**
  * Builds the server instance.
  * @returns {Promise<FastifyInstance>} The server instance.
@@ -45,7 +44,7 @@ export async function buildServer(): Promise<FastifyInstance> {
 
     // register cors
     await app.register(fastifyCors, {
-		origin: "*",
+		origin:  [CORS_ORIGIN_WEATHER_APP], // list of allowed origins (string or array of strings)
 		methods: ["GET", "POST", "PUT", "DELETE"],
 		allowedHeaders: ["Content-Type"],
 	});
