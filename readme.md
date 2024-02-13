@@ -23,8 +23,8 @@ This Fastify Proxy Server is an comprehensive, modular API designed to serve as 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/fastify_proxy_server.git
-cd fastify_proxy_server
+git clone https://github.com/jessur2030/api-proxy-server.git
+cd api-proxy-server
 ```
 
 
