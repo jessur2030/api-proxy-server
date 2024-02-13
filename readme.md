@@ -2,6 +2,9 @@
 
 This Fastify Proxy Server is an comprehensive, modular API designed to serve as a performant intermediary for external API requests, featuring built-in rate limiting, automatic Swagger documentation, and robust request/response schema validation using Zod. It's ideal for applications requiring efficient data fetching with caching capabilities (both `node-cache` and Redis supported), detailed API documentation, and controlled request rates to optimize performance and reliability.
 
+## Live Demo
+[Live swagger docs](https://api-proxy-server-iih7.onrender.com/documentation)
+
 ## Features
 
 - **Modular Architecture**: Easily extendable to support various external APIs or custom data processing modules.

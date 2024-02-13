@@ -5,7 +5,7 @@ pnpm init
 
 ### Install dependencies
 ```bash
-pnpm add fastify dotenv zod zod-to-json-schema @fastify/cors @fastify/swagger @fastify/swagger-ui node-cach node-fetch ioredis @fastify/rate-limit
+pnpm add fastify dotenv zod zod-to-json-schema @fastify/cors @fastify/swagger @fastify/swagger-ui node-cach axios ioredis @fastify/rate-limit
 ```
 
 ### Install dev dependencies
