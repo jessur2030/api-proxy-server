@@ -1,4 +1,5 @@
-import fetch, { RequestInit } from 'node-fetch';
+// Import axios and its types for request configurations
+import axios, { AxiosRequestConfig, AxiosError } from 'axios';
 import { WeatherSchemaType } from "../module/weather/weather.schema";
 
 interface ValidationResult {
@@ -9,41 +10,44 @@ interface ValidationResult {
 type WeatherEndpoint = 'weather' | 'forecast' | '';
 
 /**
- * Interface representing a successful data response with typed data.
- *
- * @template T The type of the data in the response.
+ * Generic interface for the data response to ensure type safety and consistency in the response structure.
+ * @template T The type of the data being fetched.
  */
 interface DataResponse<T> {
   data: T;
 }
 
 /**
- * Fetches data from a URL using node-fetch with robust error handling and type safety.
+ * Fetches data from a specified URL using Axios. Designed to be reusable, it abstracts the complexities of making HTTP requests and provides robust error handling.
  *
- * @template T The type of the data expected in the response.
- * @param url The URL to fetch data from.
- * @param options Optional request options (e.g., headers, method, body).
- * @returns A promise resolving to a `DataResponse` object containing the fetched data.
-*/
-export async function fetchData<T>(
-    url: string,
-    options: RequestInit = {}
-  ): Promise<DataResponse<T>> {
-    try {
-      const response = await fetch(url, options);
-  
-      // Check for successful status codes
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-  
-      // Type assertion to ensure the response is JSON with the expected type
-      const data = await response.json() as T; // Type assertion here
-      return  data as DataResponse<T>;
-    } catch (error) {
+ * @template T The expected type of the data to be returned in the response.
+ * @param {string} url The URL from which to fetch data.
+ * @param {AxiosRequestConfig} [options={}] Optional configurations for the Axios request.
+ * @returns {Promise<DataResponse<T>>} A promise that resolves to a DataResponse object containing the fetched data.
+ * @throws {Error} Throws an error if the request fails or if data parsing encounters an issue.
+ */
+export async function fetchData<T>(url: string, options: AxiosRequestConfig = {}): Promise<DataResponse<T>> {
+  try {
+    const response = await axios({ url, ...options });
+    // The response data is directly assigned and asserted to the generic type T for type safety.
+    return { data: response.data as T };
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    // Distinguish between Axios errors (e.g., HTTP errors) and other unexpected errors.
+    if (axiosError.isAxiosError) {
+      // Provide detailed error information for better debugging by the developer.
+      console.error(`HTTP error: ${axiosError.message}`, {
+        url,
+        status: axiosError.response?.status,
+        data: axiosError.response?.data,
+      });
+      throw new Error(`Failed to fetch data: ${axiosError.message}`);
+    } else {
+      // Handle non-Axios errors, such as network issues or JSON parsing errors.
       console.error('Error fetching data:', error);
-      throw error; // Re-throw to allow handling in calling code
+      throw new Error('An unexpected error occurred while fetching data.');
     }
+  }
 }
 
 /**
