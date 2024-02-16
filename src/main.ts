@@ -85,13 +85,34 @@ export async function buildServer(): Promise<FastifyInstance> {
     return app;
 }
 
-async function main(){
-    const app =  await buildServer();
-    await app.listen({
-        port: PORT,
-        host: HOST
-    })
-    console.log(`Server running on port http://${HOST}:${PORT} in ${NODE_ENV} mode`);
+async function main() {
+    const app = await buildServer();
+    try {
+        await app.listen({
+            port: PORT,
+            host: HOST
+        });
+        console.log(`Server running on port http://${HOST}:${PORT} in ${NODE_ENV} mode`);
+        // Setup graceful shutdown
+        const gracefulShutdown = async (signal: string) => {
+            console.log(`Received ${signal}. Gracefully shutting down...`);
+            try {
+                await app.close(); // Stops the server from accepting new connections
+                console.log('Server successfully closed');
+                process.exit(0); // Exit successfully
+            } catch (error) {
+                console.error('Error during shutdown:', error);
+                process.exit(1); // Exit with error state
+            }
+        };
+        // Listen for shutdown signals
+        process.on('SIGINT', gracefulShutdown);
+        process.on('SIGTERM', gracefulShutdown);
+
+    } catch (error) {
+        console.error(`Failed to start server: ${error}`);
+        process.exit(1);
+    }
 }
 
-main();
+main().catch(console.error);
