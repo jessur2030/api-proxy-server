@@ -6,33 +6,34 @@ const weatherQuerySchema = z.object({
   lat: z.number().optional(),
   lon: z.number().optional(),
   zip: z.string().optional(),
-})
+});
+
+const weatherDataSchema = z.unknown();
 
 export const weather200ResponseSchema = z.object({
-  status: z.boolean(),
+  success: z.boolean(),
   message: z.string(),
-  response: z.object({}).passthrough(), // Use .passthrough() for an open object
+  data: weatherDataSchema.optional(), 
 });
 
 export const weatherErrorResponseSchema = z.object({
-  error: z.string(),
+  success: z.boolean(),
   message: z.string(),
+  error: z.string().optional(),
 });
 
 export const healthcheckResponseSchema = z.object({
   status: z.string(),
   port: z.number(),
   timestamp: z.string(),
-})
+});
 
 export type WeatherSchemaType = z.infer<typeof weatherQuerySchema>;
 export type Weather200ResponseSchemaType = z.infer<typeof weather200ResponseSchema>;
-export type healthcheckResponseSchemaType = z.infer<typeof healthcheckResponseSchema>;
+export type HealthcheckResponseSchemaType = z.infer<typeof healthcheckResponseSchema>;
 
 // Exporting JSON Schemas for Fastify and Swagger
 export const weatherQueryJsonSchema = zodToJsonSchema(weatherQuerySchema);
 export const weather200ResponseJsonSchema = zodToJsonSchema(weather200ResponseSchema);
 export const weatherErrorResponseJsonSchema = zodToJsonSchema(weatherErrorResponseSchema);
 export const healthcheckResponseJsonSchema = zodToJsonSchema(healthcheckResponseSchema);
-
-
