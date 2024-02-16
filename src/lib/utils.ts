@@ -51,22 +51,21 @@ export async function fetchData<T>(url: string, options: AxiosRequestConfig = {}
 }
 
 /**
- * Validates the provided query parameters for a weather request. Ensures that either city name,
- * lat-lon pair, or zip code is provided. Validates that both latitude and longitude are provided together if one is present.
+ * Appends weather-related search parameters to a given URLSearchParams object based on the provided query.
+ * Ensures that parameters are only added if they are valid and not undefined.
  *
- * @param {WeatherSchemaType} queryParams The query parameters to validate.
- * @returns {ValidationResult} An object containing the validation result and an optional message.
+ * @param searchParams The URLSearchParams object to modify.
+ * @param query The query parameters containing potential weather-related information.
  */
-export function appendWeatheSearchParams(searchParams: URLSearchParams, query: WeatherSchemaType) {
+export function appendWeatherSearchParams(searchParams: URLSearchParams, query: WeatherSchemaType): void {
   const { q, lat, lon, zip } = query;
-  if (q) {
-    searchParams.append('q', q);
-  } else if (lat !== undefined && lon !== undefined) { // Check if both lat and lon are provided
+
+  if (q) searchParams.append('q', q);
+  if (lat !== undefined && lon !== undefined) {
     searchParams.append('lat', lat.toString());
     searchParams.append('lon', lon.toString());
-  } else if (zip) {
-    searchParams.append('zip', zip);
   }
+  if (zip) searchParams.append('zip', zip);
 }
 
 /**
