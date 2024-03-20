@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  proxy-api-app:
+    container_name: proxy-api-app
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=9000
+      - HOST=0.0.0.0
+    build:
+      context: ./
+
+  cadd:
+    image: caddy/caddy:2.2.1-alpine
+    container_name: caddy-services
+    restart: unless-stopped
+    ports:
+      - 443:443
+      - 80:80
+    volumes:
+      - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - $PWD/site:/services
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
