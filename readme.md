@@ -47,7 +47,7 @@ pnpm run dev
 
 5. For caching with Redis, ensure your Redis server is running and accessible. If you're using Docker, you can start Redis with Docker Compose. Run the following command in the project root directory:
 ```bash
-docker-compose up -d
+docker-compose -f docker-compose.dev.yml up -d
 ```
 
 6. Access the Swagger documentation:
