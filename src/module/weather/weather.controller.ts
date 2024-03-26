@@ -1,8 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { WeatherSchemaType } from "./weather.schema";
 import { appendWeatherSearchParams, determineEndpoint, fetchData, validateWeatherQueryParams } from "../../lib/utils";
-import { cacheService } from "../../lib/services/cacheService";
-// import redisCacheService from "../../lib/services/redisCacheService";
+import redisCacheService from "../../lib/services/redisCacheService";
 
 const OPEN_WEATHER_API_BASE_URL = process.env.OPEN_WEATHER_API_BASE_URL as string;
 const OPEN_WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY as string;
@@ -17,8 +16,7 @@ export async function handleWeatherData(request: FastifyRequest<{ Querystring: W
   reply.header('Cache-Control', 'public, max-age=300');
 
   // Attempt to retrieve data from cache
-  const cachedData = await cacheService.get(cacheKey);
-  // const cachedData = await redisCacheService.get(cacheKey);
+  const cachedData = await redisCacheService.get(cacheKey);
   if (cachedData) {
     return reply.status(200).send({ success: true, message: "Weather data fetched successfully from cache", data: cachedData });
   }
@@ -34,8 +32,7 @@ export async function handleWeatherData(request: FastifyRequest<{ Querystring: W
   try {
     const url = `${OPEN_WEATHER_API_BASE_URL}/${endpoint}?${searchParams.toString()}`;
     const freshData = await fetchData(url);
-    await cacheService.set(cacheKey, freshData, 300); // Cache for 5 minutes
-    // await redisCacheService.set(cacheKey, freshData, 300); // Cache for 5 minutes
+    await redisCacheService.set(cacheKey, freshData, 300); // Cache for 5 minutes
     return reply.status(200).send({ success: true, message: "Weather data fetched successfully", data: freshData });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
